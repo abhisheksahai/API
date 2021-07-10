@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 
+
+/// <summary>
+/// CourseLibraray.API.Controllers
+/// </summary>
 namespace CourseLibraray.API.Controllers
 {
     [ApiController]
