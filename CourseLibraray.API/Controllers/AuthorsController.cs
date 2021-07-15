@@ -37,7 +37,7 @@ namespace CourseLibraray.API.Controllers
         }
 
         [HttpGet("{authorId}")]
-        public IActionResult Authors(Guid authorId)
+        public ActionResult<AuthorDto> Authors(Guid authorId)
         {
             _logger.LogInformation(System.Reflection.MethodBase.GetCurrentMethod().Name);
             var author = _courseLibraryRepository.GetAuthor(authorId);
