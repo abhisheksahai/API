@@ -1,7 +1,10 @@
-﻿using CourseLibrary.API.Services;
+﻿using CourseLibraray.API.Helpers;
+using CourseLibraray.API.Models;
+using CourseLibrary.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 
 
 /// <summary>
@@ -26,7 +29,18 @@ namespace CourseLibraray.API.Controllers
         public IActionResult Authors()
         {
             _logger.LogInformation(System.Reflection.MethodBase.GetCurrentMethod().Name);
-            var authors = _courseLibraryRepository.GetAuthors();
+            var authorsFromRepo = _courseLibraryRepository.GetAuthors();
+            var authors = new List<AuthorDto>();
+            foreach (var author in authorsFromRepo)
+            {
+                authors.Add(new AuthorDto()
+                {
+                    Id = author.Id,
+                    Name = $"{author.FirstName} {author.LastName}",
+                    Age = author.DateOfBirth.GetCurrentAge(),
+                    MainCategory = author.MainCategory
+                });
+            }
             return Ok(authors);
         }
 
