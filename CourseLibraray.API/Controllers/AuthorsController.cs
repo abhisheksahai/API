@@ -25,7 +25,7 @@ namespace CourseLibraray.API.Controllers
         {
             _courseLibraryRepository = courseLibraryRepository ?? throw new ArgumentNullException(nameof(courseLibraryRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(courseLibraryRepository));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(Mapper));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));           
         }
 
         [HttpGet]
