@@ -2,6 +2,7 @@ using CourseLibrary.API.DbContexts;
 using CourseLibrary.API.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,6 +52,17 @@ namespace CourseLibrary.API
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CourseLibraray.API v1"));
+            }
+            else
+            {
+                app.UseExceptionHandler(appBuilder =>
+                {
+                    appBuilder.Run(async context =>
+                    {
+                        context.Response.StatusCode = 500;
+                        await context.Response.WriteAsync("An unexpected fault occured, please try again later");
+                    });
+                });
             }
 
             app.UseRouting();
