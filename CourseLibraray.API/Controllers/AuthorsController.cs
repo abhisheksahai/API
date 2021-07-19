@@ -29,14 +29,12 @@ namespace CourseLibraray.API.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<AuthorDto>> Authors()
+        [HttpHead]
+        public ActionResult<IEnumerable<AuthorDto>> Authors([FromQuery(Name = "mainCategory")] string mainCategory, [FromQuery(Name = "searchQuery")] string searchQuery)
         {
             _logger.LogInformation(System.Reflection.MethodBase.GetCurrentMethod().Name);
-            throw new Exception("Test exception");
-            /*
-            var authorsFromRepo = _courseLibraryRepository.GetAuthors();
+            var authorsFromRepo = _courseLibraryRepository.GetAuthors(mainCategory, searchQuery);
             return Ok(_mapper.Map<IEnumerable<AuthorDto>>(authorsFromRepo));
-            */
         }
 
         [HttpGet("{authorId}")]

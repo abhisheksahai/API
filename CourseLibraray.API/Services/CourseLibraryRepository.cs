@@ -117,6 +117,28 @@ namespace CourseLibrary.API.Services
             return _context.Authors.FirstOrDefault(a => a.Id == authorId);
         }
 
+        public IEnumerable<Author> GetAuthors(string mainCategory, string searchQuery)
+        {
+            if (string.IsNullOrWhiteSpace(mainCategory) && string.IsNullOrWhiteSpace(searchQuery))
+            {
+                return GetAuthors();
+            }
+
+            var collection = _context.Authors as IQueryable<Author>;
+            if (!string.IsNullOrWhiteSpace(mainCategory))
+            {
+                collection = collection.Where(a => a.MainCategory.ToLower() == mainCategory.Trim().ToLower());
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchQuery))
+            {
+                collection = collection.Where(a => a.MainCategory.Contains(searchQuery) || a.FirstName.Contains(searchQuery) || a.LastName.Contains(searchQuery));
+            }
+
+            return collection;
+
+        }
+
         public IEnumerable<Author> GetAuthors()
         {
             return _context.Authors.ToList<Author>();
@@ -128,6 +150,7 @@ namespace CourseLibrary.API.Services
             {
                 throw new ArgumentNullException(nameof(authorIds));
             }
+
 
             return _context.Authors.Where(a => authorIds.Contains(a.Id))
                 .OrderBy(a => a.FirstName)
