@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using CourseLibraray.API.Helpers;
 using CourseLibraray.API.Models;
+using CourseLibraray.API.ResourceParameters;
+using CourseLibrary.API.Entities;
 using CourseLibrary.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -30,14 +32,14 @@ namespace CourseLibraray.API.Controllers
 
         [HttpGet]
         [HttpHead]
-        public ActionResult<IEnumerable<AuthorDto>> Authors([FromQuery(Name = "mainCategory")] string mainCategory, [FromQuery(Name = "searchQuery")] string searchQuery)
+        public ActionResult<IEnumerable<AuthorDto>> Authors([FromQuery] AuthorsResourceParameters authorsResourceParameters)
         {
             _logger.LogInformation(System.Reflection.MethodBase.GetCurrentMethod().Name);
-            var authorsFromRepo = _courseLibraryRepository.GetAuthors(mainCategory, searchQuery);
+            var authorsFromRepo = _courseLibraryRepository.GetAuthors(authorsResourceParameters);
             return Ok(_mapper.Map<IEnumerable<AuthorDto>>(authorsFromRepo));
         }
 
-        [HttpGet("{authorId}")]
+        [HttpGet("{authorId}", Name = "GetAuthor")]
         public ActionResult<AuthorDto> Authors(Guid authorId)
         {
             _logger.LogInformation(System.Reflection.MethodBase.GetCurrentMethod().Name);
@@ -49,5 +51,14 @@ namespace CourseLibraray.API.Controllers
             return Ok(_mapper.Map<AuthorDto>(author));
         }
 
+        [HttpPost]
+        public ActionResult<AuthorDto> CreateAuthor(AuthorForCreationDto authorForCreationDto)
+        {
+            _logger.LogInformation(System.Reflection.MethodBase.GetCurrentMethod().Name);
+            var author = _mapper.Map<Author>(authorForCreationDto);
+            _courseLibraryRepository.AddAuthor(author);
+            _courseLibraryRepository.Save();
+            return CreatedAtRoute("GetAuthor", new { authorId = author.Id }, author);
+        }
     }
 }

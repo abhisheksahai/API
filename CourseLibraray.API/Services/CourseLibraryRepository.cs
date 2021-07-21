@@ -1,4 +1,5 @@
-﻿using CourseLibrary.API.DbContexts;
+﻿using CourseLibraray.API.ResourceParameters;
+using CourseLibrary.API.DbContexts;
 using CourseLibrary.API.Entities;
 using System;
 using System.Collections.Generic;
@@ -117,25 +118,25 @@ namespace CourseLibrary.API.Services
             return _context.Authors.FirstOrDefault(a => a.Id == authorId);
         }
 
-        public IEnumerable<Author> GetAuthors(string mainCategory, string searchQuery)
+        public IEnumerable<Author> GetAuthors(AuthorsResourceParameters authorsResourceParameters)
         {
-            if (string.IsNullOrWhiteSpace(mainCategory) && string.IsNullOrWhiteSpace(searchQuery))
+            if (string.IsNullOrWhiteSpace(authorsResourceParameters.MainCategory) && string.IsNullOrWhiteSpace(authorsResourceParameters.SearchQuery))
             {
                 return GetAuthors();
             }
 
             var collection = _context.Authors as IQueryable<Author>;
-            if (!string.IsNullOrWhiteSpace(mainCategory))
+            if (!string.IsNullOrWhiteSpace(authorsResourceParameters.MainCategory))
             {
-                collection = collection.Where(a => a.MainCategory.ToLower() == mainCategory.Trim().ToLower());
+                collection = collection.Where(a => a.MainCategory.ToLower() == authorsResourceParameters.MainCategory.Trim().ToLower());
             }
 
-            if (!string.IsNullOrWhiteSpace(searchQuery))
+            if (!string.IsNullOrWhiteSpace(authorsResourceParameters.SearchQuery))
             {
-                collection = collection.Where(a => a.MainCategory.Contains(searchQuery) || a.FirstName.Contains(searchQuery) || a.LastName.Contains(searchQuery));
+                collection = collection.Where(a => a.MainCategory.Contains(authorsResourceParameters.SearchQuery) || a.FirstName.Contains(authorsResourceParameters.SearchQuery) || a.LastName.Contains(authorsResourceParameters.SearchQuery));
             }
 
-            return collection;
+            return collection.ToList<Author>();
 
         }
 
