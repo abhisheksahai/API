@@ -55,10 +55,18 @@ namespace CourseLibraray.API.Controllers
         public ActionResult<AuthorDto> CreateAuthor(AuthorForCreationDto authorForCreationDto)
         {
             _logger.LogInformation(System.Reflection.MethodBase.GetCurrentMethod().Name);
-            var author = _mapper.Map<Author>(authorForCreationDto);
-            _courseLibraryRepository.AddAuthor(author);
+            var authorEntity     = _mapper.Map<Author>(authorForCreationDto);
+            _courseLibraryRepository.AddAuthor(authorEntity);
             _courseLibraryRepository.Save();
-            return CreatedAtRoute("GetAuthor", new { authorId = author.Id }, author);
+            var authorToReturn = _mapper.Map<AuthorDto>(authorEntity);
+            return CreatedAtRoute("GetAuthor", new { authorId = authorEntity.Id }, authorToReturn);
+        }
+
+        [HttpOptions]
+        public IActionResult GetAuthorOptions()
+        {
+            Response.Headers.Add("Allow", "GET,OPTIONS,POST");
+            return Ok();
         }
     }
 }
