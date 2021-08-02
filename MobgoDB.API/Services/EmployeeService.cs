@@ -1,4 +1,5 @@
 ﻿using MobgoDB.API.Models;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,25 @@ namespace MobgoDB.API.Services
         {
             Employee employee = _employees.Find<Employee>(emp => emp.Id == id).FirstOrDefault();
             return employee;
+        }
+
+        public void Add(Employee employee)
+        {
+            if (employee == null)
+            {
+                throw new ArgumentNullException(nameof(Employee));
+            }
+            _employees.InsertOne(employee);
+        }
+
+        public void Delete(string id)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+            var result = _employees.DeleteOne(emp => emp.Id == id);
+
         }
 
     }

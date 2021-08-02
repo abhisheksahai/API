@@ -55,7 +55,7 @@ namespace CourseLibraray.API.Controllers
         public ActionResult<AuthorDto> CreateAuthor(AuthorForCreationDto authorForCreationDto)
         {
             _logger.LogInformation(System.Reflection.MethodBase.GetCurrentMethod().Name);
-            var authorEntity     = _mapper.Map<Author>(authorForCreationDto);
+            var authorEntity = _mapper.Map<Author>(authorForCreationDto);
             _courseLibraryRepository.AddAuthor(authorEntity);
             _courseLibraryRepository.Save();
             var authorToReturn = _mapper.Map<AuthorDto>(authorEntity);
