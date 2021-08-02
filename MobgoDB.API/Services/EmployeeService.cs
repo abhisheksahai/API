@@ -46,7 +46,16 @@ namespace MobgoDB.API.Services
                 throw new ArgumentNullException(nameof(id));
             }
             var result = _employees.DeleteOne(emp => emp.Id == id);
+        }
 
+        public void Update(Employee employee)
+        {
+            if (employee == null)
+            {
+                throw new ArgumentNullException(nameof(Employee));
+            }
+            var update = Builders<Employee>.Update.Set("Name", employee.Name);
+            _employees.UpdateOne(emp => emp.Id == employee.Id, update);
         }
 
     }
